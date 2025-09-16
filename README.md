@@ -1,355 +1,95 @@
-# ArUCO Tag Detection and Pose Estimation
+# ArUco Pose Estimation
 
-A comprehensive Python implementation of ArUCO tag detection and relative pose estimation built from scratch, without relying on built-in OpenCV ArUCO functions.
+This document provides an overview of the ArUco Pose Estimation project, a tool designed for real-time tracking and pose estimation of ArUco markers. The system is built with Python and leverages computer vision techniques to deliver accurate and efficient performance.
 
-## 🎯 Project Overview
+### Project Purpose
 
-This project implements a complete ArUCO tag detection and pose estimation system that includes:
+The primary goal of this project is to offer a straightforward and effective solution for tracking ArUco markers and estimating their 3D pose relative to a camera. This has applications in robotics, augmented reality, and various other fields where precise object tracking is required.
 
-- **Custom ArUCO Detection**: Corner detection, thresholding, contour analysis
-- **Camera Calibration**: From-scratch implementation for enhanced accuracy
-- **Pose Estimation**: Homography transformations, perspective transformation, and triangulation
-- **Real-time Tracking**: Live camera feed processing with pose visualization
+### Key Features
 
-## 🏗️ Architecture
+- **ArUco Marker Generation**: Utility for creating custom ArUco markers for testing and application.
+- **Camera Calibration**: A guided process to calibrate your camera, ensuring accurate pose estimation by correcting lens distortion.
+- **Real-time Marker Detection**: High-speed detection of ArUco markers in a live video stream.
+- **3D Pose Estimation**: Calculation of the 3D position and orientation of each detected marker.
+- **Modular and Extensible**: The codebase is organized into distinct modules for easy understanding and extension.
 
-```
-aruco_pose_estimation/
-├── src/
-│   ├── camera_calibration.py     # Camera calibration module
-│   ├── aruco_detection.py        # ArUCO marker detection
-│   ├── pose_estimation.py        # Pose estimation algorithms
-│   └── aruco_tracker.py          # Main tracking system
-├── examples/
-│   ├── basic_detection.py        # Basic detection demo
-│   ├── camera_calibration_example.py
-│   ├── full_pose_estimation.py   # Complete system demo
-│   └── generate_markers.py       # ArUCO marker generator
-├── data/                         # Calibration and output data
-├── calibration_images/           # Camera calibration images
-└── README.md
-```
+### Dependencies
 
-## 🚀 Features
+The project requires the following Python libraries:
 
-### Core Implementations
+- `numpy`
+- `opencv-python`
+- `scipy`
 
-1. **Camera Calibration from Scratch**
+These dependencies are listed in the `requirements.txt` file.
 
-   - Custom checkerboard corner detection
-   - Subpixel refinement algorithms
-   - Distortion parameter estimation
-   - Calibration accuracy metrics
+### Installation
 
-2. **ArUCO Detection Pipeline**
-
-   - Adaptive thresholding for robust detection
-   - Custom contour analysis and filtering
-   - Quadrilateral approximation algorithms
-   - Corner ordering and refinement
-
-3. **Pose Estimation Algorithms**
-
-   - Homography-based pose estimation
-   - Perspective-n-Point (PnP) solving
-   - Iterative pose refinement
-   - Triangulation for stereo setups
-
-4. **Real-time Tracking System**
-   - Temporal smoothing for stable pose
-   - Performance optimization
-   - Interactive calibration interface
-   - Data logging and visualization
-
-## 📋 Requirements
-
-```bash
-pip install numpy opencv-python scipy
-```
-
-### System Requirements
-
-- Python 3.7+
-- OpenCV 4.0+
-- NumPy 1.19+
-- SciPy 1.5+
-- Webcam or camera device
-
-## 🔧 Installation
+To get started, clone the repository and install the required packages:
 
 1. **Clone the repository:**
 
-```bash
-git clone <repository-url>
-cd aruco_pose_estimation
-```
-
+   ```sh
+   git clone https://github.com/UpayanChatterjee/aruco-pose-estimation.git
+   cd aruco-pose-estimation
+   ```
 2. **Install dependencies:**
 
-```bash
-pip install -r requirements.txt
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+### Usage Guide
+
+The project includes several examples to demonstrate its functionality.
+
+#### 1. Generating ArUco Markers
+
+You can generate ArUco markers for printing and use in your scenes. The `generate_markers.py` script creates individual markers and a sheet with multiple markers.
+
+```sh
+python examples/generate_markers.py
 ```
 
-3. **Generate test markers:**
+The generated markers will be saved in the `data/generated_markers` directory.
 
-```bash
-cd examples
-python generate_markers.py
+#### 2. Camera Calibration
+
+Accurate pose estimation requires a calibrated camera. The `camera_calibration_example.py` script guides you through this process. You will need a checkerboard pattern to perform the calibration.
+
+```sh
+python examples/camera_calibration_example.py
 ```
 
-## 🎮 Quick Start
+Follow the on-screen instructions to capture images of the checkerboard at various angles. The calibration parameters will be saved to `data/camera_calibration.json`.
 
-### 1. Generate ArUCO Markers
+#### 3. Basic Marker Detection
 
-```bash
-cd examples
-python generate_markers.py
+To test basic marker detection without pose estimation, run the `basic_detection.py` script. This will open a camera feed and highlight any detected ArUco markers.
+
+```sh
+python examples/basic_detection.py
 ```
 
-This creates printable ArUCO markers in `data/generated_markers/`.
+#### 4. Full Pose Estimation
 
-### 2. Basic Detection Test
+The `full_pose_estimation.py` script runs the complete pipeline, including real-time marker detection and 3D pose estimation. It will first attempt to load the camera calibration file. If the file is not found, it will initiate the interactive calibration process.
 
-```bash
-python basic_detection.py
+```sh
+python examples/full_pose_estimation.py
 ```
 
-Tests marker detection without pose estimation.
+The script will display a live video feed with coordinate axes drawn on each detected marker, indicating its 3D position and orientation.
 
-### 3. Camera Calibration
+### Project Structure
 
-```bash
-python camera_calibration_example.py
-```
+The repository is organized as follows:
 
-Interactive calibration process:
+- `src/`: Contains the core source code for marker detection, camera calibration, and pose estimation.
+- `examples/`: Includes example scripts demonstrating how to use the different components of the project.
+- `data/`: Stores data files, such as camera calibration parameters and generated markers.
+- `calibration_images/`: A directory for storing images used in the camera calibration process.
+- `requirements.txt`: A list of Python dependencies for the project.
 
-1. Print a 9x6 checkerboard pattern
-2. Capture 15-20 images from different angles
-3. Automatic calibration parameter computation
-
-### 4. Full Pose Estimation
-
-```bash
-python full_pose_estimation.py
-```
-
-Complete system with real-time pose estimation and visualization.
-
-## 📖 Detailed Usage
-
-### Camera Calibration
-
-```python
-from camera_calibration import CameraCalibration
-
-# Initialize calibrator
-calibrator = CameraCalibration(checkerboard_size=(9, 6), square_size=2.5)
-
-# Perform calibration
-if calibrator.calibrate_from_images("calibration_images/"):
-    calibrator.save_calibration("camera_calibration.json")
-```
-
-### ArUCO Detection
-
-```python
-from aruco_detection import ArUCODetector
-
-# Initialize detector
-detector = ArUCODetector()
-
-# Detect markers in image
-corners_list, ids_list = detector.detect_markers(image)
-
-# Draw results
-result_image = detector.draw_detected_markers(image, corners_list, ids_list)
-```
-
-### Pose Estimation
-
-```python
-from pose_estimation import PoseEstimator
-
-# Initialize with camera parameters
-pose_estimator = PoseEstimator(camera_matrix, distortion_coeffs)
-
-# Estimate pose for detected marker
-rvec, tvec = pose_estimator.estimate_pose_single_marker(corners, marker_size)
-
-# Draw coordinate axes
-result_image = pose_estimator.draw_coordinate_axes(image, rvec, tvec)
-```
-
-### Complete Tracking System
-
-```python
-from aruco_tracker import ArUCOTracker
-
-# Initialize tracker
-tracker = ArUCOTracker(
-    calibration_file="camera_calibration.json",
-    marker_size=0.05  # 5cm markers
-)
-
-# Run live tracking
-tracker.run_live_tracking(camera_index=0)
-```
-
-## ⚙️ Configuration
-
-### Detection Parameters
-
-Adjust detection sensitivity in `aruco_detection.py`:
-
-```python
-self.min_marker_area = 100        # Minimum marker area
-self.max_marker_area = 50000      # Maximum marker area
-self.min_contour_length = 16      # Minimum contour perimeter
-```
-
-### Pose Estimation Settings
-
-Configure pose estimation in `pose_estimation.py`:
-
-```python
-# Marker size in meters
-marker_size = 0.05  # 5cm markers
-
-# Pose refinement iterations
-max_iterations = 10
-```
-
-### Tracking Parameters
-
-Modify tracking behavior in `aruco_tracker.py`:
-
-```python
-self.max_history_length = 5       # Temporal smoothing window
-self.marker_size = 0.05           # Real-world marker size
-```
-
-## 📊 Performance Metrics
-
-The system provides several accuracy metrics:
-
-1. **Calibration Accuracy**: Reprojection error in pixels
-2. **Detection Rate**: Markers detected per frame
-3. **Pose Accuracy**: Reprojection error for pose estimation
-4. **Frame Rate**: Real-time processing speed
-
-### Expected Performance
-
-- **Calibration Error**: < 0.5 pixels (good), < 0.3 pixels (excellent)
-- **Detection Range**: 0.1m - 5m depending on marker size
-- **Pose Accuracy**: ±2mm translation, ±1° rotation (optimal conditions)
-- **Frame Rate**: 15-30 FPS on standard hardware
-
-## 🔬 Algorithm Details
-
-### Camera Calibration Process
-
-1. **Corner Detection**: Harris corner detection with subpixel refinement
-2. **Pattern Recognition**: Checkerboard pattern validation
-3. **Parameter Estimation**: Intrinsic matrix and distortion coefficients
-4. **Optimization**: Non-linear refinement using Levenberg-Marquardt
-
-### ArUCO Detection Pipeline
-
-1. **Preprocessing**: Adaptive thresholding and noise reduction
-2. **Contour Detection**: External contour extraction with area filtering
-3. **Shape Analysis**: Quadrilateral approximation and validation
-4. **Corner Refinement**: Subpixel corner localization
-5. **Pattern Extraction**: Perspective transformation and bit extraction
-6. **ID Recognition**: Dictionary matching with rotation handling
-
-### Pose Estimation Methods
-
-1. **PnP Solver**: Perspective-n-Point problem solution
-2. **Homography Decomposition**: Alternative pose extraction method
-3. **Iterative Refinement**: Pose optimization using reprojection error
-4. **Temporal Smoothing**: Multi-frame pose stabilization
-
-## 🎯 Applications
-
-This implementation is suitable for:
-
-- **Robotics**: Robot localization and navigation
-- **Augmented Reality**: Object tracking and overlay
-- **Industrial Automation**: Part positioning and quality control
-- **Research**: Computer vision algorithm development
-- **Education**: Learning pose estimation concepts
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Poor Detection Rate**
-
-   - Ensure good lighting conditions
-   - Check marker print quality
-   - Adjust detection thresholds
-   - Verify camera focus
-
-2. **Calibration Failure**
-
-   - Capture more calibration images (15-20 minimum)
-   - Use different angles and distances
-   - Ensure checkerboard is flat and high-contrast
-   - Check checkerboard size parameters
-
-3. **Unstable Pose Estimation**
-
-   - Increase temporal smoothing window
-   - Improve camera calibration
-   - Use larger markers
-   - Reduce camera motion
-
-4. **Low Frame Rate**
-   - Reduce image resolution
-   - Optimize detection parameters
-   - Use faster hardware
-   - Disable unnecessary features
-
-### Debug Mode
-
-Enable debug output by modifying the source files:
-
-```python
-# Add to any module for detailed logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-```
-
-## 📚 Technical References
-
-This implementation is based on the following research:
-
-1. **ArUCO Markers**: Garrido-Jurado et al. "Automatic generation and detection of highly reliable fiducial markers under occlusion"
-2. **Camera Calibration**: Zhang, Z. "A flexible new technique for camera calibration"
-3. **Pose Estimation**: Lepetit et al. "EPnP: An accurate O(n) solution to the PnP problem"
-4. **Homography**: Hartley & Zisserman "Multiple View Geometry in Computer Vision"
-
-## 🤝 Contributing
-
-Contributions are welcome! Areas for improvement:
-
-- Enhanced marker dictionaries
-- Robust pose estimation algorithms
-- Performance optimizations
-- Additional calibration patterns
-- Stereo vision support
-
-## 📄 License
-
-This project is provided for educational and research purposes. Please cite appropriately if used in academic work.
-
-## 🔗 Related Projects
-
-- OpenCV ArUCO module (reference implementation)
-- AprilTag detection library
-- SLAM frameworks using fiducial markers
-
----
-
-**Note**: This implementation prioritizes educational value and algorithmic understanding over pure performance. For production applications, consider using optimized libraries like OpenCV's ArUCO module.
+This structure separates the core logic from the example implementations, making the project easier to navigate and maintain.
